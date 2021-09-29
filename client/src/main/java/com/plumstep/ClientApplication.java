@@ -1,5 +1,7 @@
 package com.plumstep;
 
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -15,13 +17,12 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import javax.net.ssl.SSLContext;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -71,8 +72,8 @@ public class ClientApplication {
     private HttpClient httpClient() throws Exception {
         // Load our keystore and truststore containing certificates that we trust.
         SSLContext sslcontext =
-                SSLContexts.custom().loadTrustMaterial(trustStore.getFile(), trustStorePassword.toCharArray())
-                        .loadKeyMaterial(keyStore.getFile(), keyStorePassword.toCharArray(),
+                SSLContexts.custom().loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray())
+                        .loadKeyMaterial(keyStore.getURL(), keyStorePassword.toCharArray(),
                                 keyPassword.toCharArray()).build();
         SSLConnectionSocketFactory sslConnectionSocketFactory =
                 new SSLConnectionSocketFactory(sslcontext, new NoopHostnameVerifier());
